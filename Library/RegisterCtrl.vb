@@ -6,7 +6,7 @@ Public Class RegisterCtrl
     ' Controls (make sure these exist in the designer)
     ' txtFullName (TextBox)
     ' txtEmail (TextBox)
-    ' lblNewUsername (TextBox) – rename to txtNewUsername ideally
+    ' lblNewUsername (TextBox)
     ' txtNewPassword (TextBox)
     ' btnCreateAccount (Button)
     ' btnLogin (Button)
@@ -27,7 +27,17 @@ Public Class RegisterCtrl
             cmd2.Parameters.AddWithValue("@e", txtEmail.Text)
             cmd2.ExecuteNonQuery()
 
-            MessageBox.Show("Registration successful!")
+            MessageBox.Show("Registration successful! Please log in.")
+
+            ' ✅ After success, go to login screen
+            Dim parentForm As Form = Me.FindForm()
+            If parentForm IsNot Nothing Then
+                parentForm.Controls.Clear()
+                Dim loginCtrl As New LoginCtrl()
+                loginCtrl.Dock = DockStyle.Fill
+                parentForm.Controls.Add(loginCtrl)
+            End If
+
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message)
         End Try
@@ -35,8 +45,13 @@ Public Class RegisterCtrl
     End Sub
 
     Private Sub btnLogin_Click(sender As Object, e As EventArgs) Handles btnLogin.Click
-        Dim parentForm As Panel = CType(Me.FindForm(), Panel)
-        parentForm.LoadControl(New LoginCtrl())
+        Dim parentForm As Form = Me.FindForm()
+        If parentForm IsNot Nothing Then
+            parentForm.Controls.Clear()
+            Dim loginCtrl As New LoginCtrl()
+            loginCtrl.Dock = DockStyle.Fill
+            parentForm.Controls.Add(loginCtrl)
+        End If
     End Sub
 
     Private Sub RegisterCtrl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
