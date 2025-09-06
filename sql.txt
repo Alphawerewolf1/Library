@@ -1,0 +1,87 @@
+-- Create database
+CREATE DATABASE library_db;
+USE library_db;
+
+-- =========================
+-- Users (Admins and Borrowers)
+-- =========================
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin','borrower') DEFAULT 'borrower'
+);
+
+-- =========================
+-- Authors
+-- =========================
+CREATE TABLE authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+-- =========================
+-- Books
+-- =========================
+CREATE TABLE books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    author_id INT,
+    isbn VARCHAR(20) UNIQUE,
+    genre VARCHAR(50),
+    quantity INT DEFAULT 1,
+    FOREIGN KEY (author_id) REFERENCES authors(author_id)
+);
+
+-- =========================
+-- Borrowers (Profile Info)
+-- =========================
+CREATE TABLE borrowers (
+    borrower_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    full_name VARCHAR(100),
+    email VARCHAR(100),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+-- =========================
+-- Borrowed Books
+-- =========================
+CREATE TABLE borrowed_books (
+    borrow_id INT AUTO_INCREMENT PRIMARY KEY,
+    borrower_id INT,
+    book_id INT,
+    borrow_date DATE,
+    return_date DATE,
+    FOREIGN KEY (borrower_id) REFERENCES borrowers(borrower_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
+);
+
+-- =========================
+-- Default Users
+-- =========================
+INSERT INTO users (username, password, role) VALUES
+('admin1', 'admin123', 'admin'),
+('borrower1', 'borrow123', 'borrower');
+
+-- =========================
+-- Default Borrower Profile
+-- =========================
+INSERT INTO borrowers (user_id, full_name, email) VALUES
+(2, 'John Doe', 'johndoe@example.com');
+
+-- =========================
+-- Default Authors
+-- =========================
+INSERT INTO authors (name) VALUES
+('J.K. Rowling'),
+('George Orwell'),
+('J.R.R. Tolkien');
+
+-- =========================
+-- Default Books
+-- =========================
+INSERT INTO books (title, author_id, isbn, genre, quantity) VALUES
+('Harry Potter and the Philosopher''s Stone', 1, '9780747532743', 'Fantasy', 5),
+('1984', 2, '9780451524935', 'Dystopian', 3),
+('The Hobbit', 3, '9780345339683', 'Fantasy', 4);
