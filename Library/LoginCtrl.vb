@@ -26,11 +26,24 @@ Public Class LoginCtrl
                 adminCtrl.username = username
                 parentForm.LoadControl(adminCtrl)
             Else
-                ' fetch borrower_id
+                ' borrower login
                 Connect()
                 Dim getBorrowerCmd As New MySqlCommand("SELECT borrower_id FROM borrowers WHERE user_id=@uid", conn)
                 getBorrowerCmd.Parameters.AddWithValue("@uid", userId)
-                Dim borrowerId As Integer = CInt(getBorrowerCmd.ExecuteScalar())
+                Dim borrowerIdObj As Object = getBorrowerCmd.ExecuteScalar()
+
+                ' if borrower profile doesn’t exist, create one
+                If borrowerIdObj Is Nothing OrElse borrowerIdObj Is DBNull.Value Then
+                    Dim insertCmd As New MySqlCommand("INSERT INTO borrowers(user_id, full_name, email) VALUES(@uid, @name, @mail)", conn)
+                    insertCmd.Parameters.AddWithValue("@uid", userId)
+                    insertCmd.Parameters.AddWithValue("@name", username) ' default full_name = username
+                    insertCmd.Parameters.AddWithValue("@mail", username & "@mail.com") ' placeholder email
+                    insertCmd.ExecuteNonQuery()
+
+                    borrowerIdObj = insertCmd.LastInsertedId
+                End If
+
+                Dim borrowerId As Integer = Convert.ToInt32(borrowerIdObj)
                 conn.Close()
 
                 Dim borrowerCtrl As New BorrowerDashboardCtrl()
