@@ -25,6 +25,9 @@ SET time_zone = "+00:00";
 -- Database: `library_db`
 --
 
+CREATE DATABASE IF NOT EXISTS library_db;
+USE library_db;
+
 -- --------------------------------------------------------
 
 --
