@@ -15,7 +15,7 @@ Public Class RegisterCtrl
         Connect()
         Try
             Dim cmd As New MySqlCommand("INSERT INTO users(username,password,role) VALUES(@u,@p,'borrower')", conn)
-            cmd.Parameters.AddWithValue("@u", lblNewUsername.Text)
+            cmd.Parameters.AddWithValue("@u", txtNewUsername.Text)
             cmd.Parameters.AddWithValue("@p", txtNewPassword.Text)
             cmd.ExecuteNonQuery()
 
@@ -55,6 +55,10 @@ Public Class RegisterCtrl
     End Sub
 
     Private Sub RegisterCtrl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
+
+    Private Sub txtNewUsername_TextChanged(sender As Object, e As EventArgs) Handles txtNewUsername.TextChanged
 
     End Sub
 End Class
