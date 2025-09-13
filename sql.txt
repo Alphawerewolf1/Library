@@ -1,4 +1,6 @@
+-- =========================
 -- Create database
+-- =========================
 CREATE DATABASE library_db;
 USE library_db;
 
@@ -53,6 +55,7 @@ CREATE TABLE borrowed_books (
     book_id INT,
     borrow_date DATE,
     return_date DATE,
+    quantity_borrowed INT DEFAULT 1,
     FOREIGN KEY (borrower_id) REFERENCES borrowers(borrower_id),
     FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
